@@ -1,0 +1,68 @@
+<body class="bg-gray-100">
+<div class="min-h-screen flex items-center justify-center"> 
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-xl font-bold mb-4">Mehrwertsteuer Rechner</h1>
+    <div class="mb-4">
+      <label for="netAmount" class="block text-gray-700 text-sm font-bold mb-2">Nettobetrag (ohne MwSt):</label>
+      <input type="number" id="netAmount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Betrag eingeben" step="0.01">
+    </div>
+    <div class="mb-4">
+      <label for="vatRate" class="block text-gray-700 text-sm font-bold mb-2">Mehrwertsteuersatz (%):</label>
+      <input type="number" id="vatRate" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="19" step="0.01">
+    </div>
+    <div class="mb-4">
+      <button id="calculateBtn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Berechnen</button>
+    </div>
+    <div class="mb-4">
+      <label for="vatAmount" class="block text-gray-700 text-sm font-bold mb-2">Mehrwertsteuerbetrag:</label>
+      <input type="text" id="vatAmount" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+    </div>
+    <div class="mb-4">
+      <label for="result" class="block text-gray-700 text-sm font-bold mb-2">Ergebnis (inkl. MwSt):</label>
+      <input type="text" id="result" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+    </div>
+    <div class="flex items-center justify-between">
+      <button id="copyBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Kopieren</button>
+      <span id="copySuccess" class="copy-success">Kopiert!</span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const netAmountInput = document.getElementById('netAmount');
+  const vatRateInput = document.getElementById('vatRate');
+  const vatAmountInput = document.getElementById('vatAmount');
+  const resultInput = document.getElementById('result');
+  const calculateBtn = document.getElementById('calculateBtn');
+  const copyBtn = document.getElementById('copyBtn');
+  const copySuccess = document.getElementById('copySuccess');
+
+  calculateBtn.addEventListener('click', calculateVAT);
+  netAmountInput.addEventListener('keyup', function(event) {
+    if (event.key === 'Enter') {
+      calculateVAT();
+    }
+  });
+
+  copyBtn.addEventListener('click', function() {
+    resultInput.select();
+    document.execCommand('copy');
+    copySuccess.style.display = 'block';
+    setTimeout(() => {
+      copySuccess.style.display = 'none';
+    }, 2000);
+  });
+
+  function calculateVAT() {
+    const netAmount = parseFloat(netAmountInput.value);
+    const vatRate = parseFloat(vatRateInput.value);
+    if (!isNaN(netAmount) && !isNaN(vatRate)) {
+      const vatAmount = netAmount * (vatRate / 100);
+      const totalAmount = netAmount + vatAmount;
+      vatAmountInput.value = vatAmount.toFixed(2);
+      resultInput.value = totalAmount.toFixed(2);
+    }
+  }
+</script>
+</body>
+</html>
